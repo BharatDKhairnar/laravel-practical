@@ -3,14 +3,14 @@
 @section('title', 'Login')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="text-center mt-5">
-                <h1 class="text-white">Laravel Admin Panel</h1>
-            </div>
+<div class="row justify-content-center">
 
-         <div class="card o-hidden border-0 shadow-lg my-5">
+    <div class="text-center mt-5">
+        <h1 class="text-white">Company - SignIn Panel</h1>
+    </div>
+
+    <div class="col-xl-12 col-lg-12 col-md-9">
+        <div class="card o-hidden border-0 shadow-lg my-5">
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
@@ -21,10 +21,11 @@
                                 <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                             </div>
 
-                            {{-- Alert Messages --}}
-                            @include('common.alert')
+                            @if (session('error'))
+                                <span class="text-danger"> {{ session('error') }}</span>
+                            @endif
 
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('company.login') }}">
                                 @csrf
                                 <div class="form-group">
                                     <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Enter Email Address.">
@@ -58,7 +59,7 @@
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="{{route('companies.create')}}">Company Register?</a>
+                                <a class="small" href="{{route('password.request')}}">Forgot Password?</a>
                             </div>
                         </div>
                     </div>
@@ -66,7 +67,6 @@
             </div>
         </div>
     </div>
-</div>
 
 </div>
 @endsection

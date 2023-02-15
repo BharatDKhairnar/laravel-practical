@@ -6,6 +6,7 @@
     </button>
 
     <!-- Topbar Search -->
+    @if(Auth::check())
     <form
         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
         <div class="input-group">
@@ -18,18 +19,21 @@
             </div>
         </div>
     </form>
+    @endif
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
         
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
+            @if(Auth::check())
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                {{-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> --}}
                 <img class="img-profile rounded-circle"
                     src="{{asset('admin/img/undraw_profile.svg')}}">
             </a>
+            @endif
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="userDropdown">

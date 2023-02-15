@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessMultiTenant;
+use App\Mail\sendMail;
 use App\Models\User;
-use App\Exports\UsersExport;
-use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Mail;
 
-class UserController extends Controller
+class CompanyController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -22,11 +21,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index']]);
-        $this->middleware('permission:user-create', ['only' => ['create','store', 'updateStatus']]);
-        $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:user-delete', ['only' => ['delete']]);
+       
     }
 
 
@@ -34,12 +29,11 @@ class UserController extends Controller
      * List User 
      * @param Nill
      * @return Array $user
-     * @author Shani Singh
      */
     public function index()
     {
-        $users = User::with('roles')->paginate(10);
-        return view('users.index', ['users' => $users]);
+        $users = User::paginate(10);
+        return view('companies.index', ['users' => $users]);
     }
     
     /**
@@ -50,56 +44,43 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-       
-        return view('users.add', ['roles' => $roles]);
+        return view('companies.add');
     }
 
     /**
      * Store User
      * @param Request $request
      * @return View Users
-     * @author Shani Singh
      */
     public function store(Request $request)
     {
         // Validations
         $request->validate([
-            'first_name'    => 'required',
-            'last_name'     => 'required',
-            'email'         => 'required|unique:users,email',
-            'mobile_number' => 'required|numeric|digits:10',
-            'role_id'       =>  'required|exists:roles,id',
-            'status'       =>  'required|numeric|in:0,1',
+            'company_name'           => 'required|max:100',
+            'email'                  => 'required|max:100|unique:users,email',
+            'password'               =>  ['required'],//'max:16', Password::min(8)->mixedCase()->symbols()
+            'company_website'        => 'required|url',
+            'company_licence_number' => 'required|max:50',                                                                             
+            'company_address'        => 'required|max:500',
         ]);
 
-        DB::beginTransaction();
         try {
 
-            // Store Data
-            $user = User::create([
-                'first_name'    => $request->first_name,
-                'last_name'     => $request->last_name,
-                'email'         => $request->email,
-                'mobile_number' => $request->mobile_number,
-                'role_id'       => $request->role_id,
-                'status'        => $request->status,
-                'password'      => Hash::make($request->first_name.'@'.$request->mobile_number)
-            ]);
+            $mailData = [
+                'title' => "Email Verification",
+                "bodyMessage" => "Please activate your profile by clicking over the below url."
+            ];
 
-            // Delete Any Existing Role
-            DB::table('model_has_roles')->where('model_id',$user->id)->delete();
-            
-            // Assign Role To User
-            $user->assignRole($user->role_id);
+            Mail::to($request->email)->send(new sendMail($mailData)); // Send the email
 
-            // Commit And Redirected To Listing
-            DB::commit();
-            return redirect()->route('users.index')->with('success','User Created Successfully.');
+            dispatch(new ProcessMultiTenant($request->all()));  // Dispatch the job for new specific database.
 
+            return redirect()->route('login')->with('success','Company Registered Successfully. Here you can login.');
+        
         } catch (\Throwable $th) {
-            // Rollback and return with Error
-            DB::rollBack();
+
+            Log::info("Error: ".$th->getMessage());
+
             return redirect()->back()->withInput()->with('error', $th->getMessage());
         }
     }
@@ -108,7 +89,6 @@ class UserController extends Controller
      * Update Status Of User
      * @param Integer $status
      * @return List Page With Success
-     * @author Shani Singh
      */
     public function updateStatus($user_id, $status)
     {
@@ -123,7 +103,7 @@ class UserController extends Controller
 
         // If Validations Fails
         if($validate->fails()){
-            return redirect()->route('users.index')->with('error', $validate->errors()->first());
+            return redirect()->route('companies.index')->with('error', $validate->errors()->first());
         }
 
         try {
@@ -134,7 +114,7 @@ class UserController extends Controller
 
             // Commit And Redirect on index with Success Message
             DB::commit();
-            return redirect()->route('users.index')->with('success','User Status Updated Successfully!');
+            return redirect()->route('companies.index')->with('success','User Status Updated Successfully!');
         } catch (\Throwable $th) {
 
             // Rollback & Return Error Message
@@ -147,7 +127,6 @@ class UserController extends Controller
      * Edit User
      * @param Integer $user
      * @return Collection $user
-     * @author Shani Singh
      */
     public function edit(User $user)
     {
@@ -162,7 +141,6 @@ class UserController extends Controller
      * Update User
      * @param Request $request, User $user
      * @return View Users
-     * @author Shani Singh
      */
     public function update(Request $request, User $user)
     {
@@ -197,7 +175,7 @@ class UserController extends Controller
 
             // Commit And Redirected To Listing
             DB::commit();
-            return redirect()->route('users.index')->with('success','User Updated Successfully.');
+            return redirect()->route('companies.index')->with('success','User Updated Successfully.');
 
         } catch (\Throwable $th) {
             // Rollback and return with Error
@@ -210,7 +188,6 @@ class UserController extends Controller
      * Delete User
      * @param User $user
      * @return Index Users
-     * @author Shani Singh
      */
     public function delete(User $user)
     {
@@ -220,7 +197,7 @@ class UserController extends Controller
             User::whereId($user->id)->delete();
 
             DB::commit();
-            return redirect()->route('users.index')->with('success', 'User Deleted Successfully!.');
+            return redirect()->route('companies.index')->with('success', 'User Deleted Successfully!.');
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -228,26 +205,8 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Import Users 
-     * @param Null
-     * @return View File
-     */
-    public function importUsers()
-    {
-        return view('users.import');
-    }
-
-    public function uploadUsers(Request $request)
-    {
-        Excel::import(new UsersImport, $request->file);
-        
-        return redirect()->route('users.index')->with('success', 'User Imported Successfully');
-    }
-
-    public function export() 
-    {
-        return Excel::download(new UsersExport, 'users.xlsx');
+    public function dashboard() {
+        dd("yes login");
     }
 
 }

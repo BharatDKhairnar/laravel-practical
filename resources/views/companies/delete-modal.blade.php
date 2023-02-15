@@ -15,7 +15,7 @@
                     onclick="event.preventDefault(); document.getElementById('user-delete-form').submit();">
                     Delete
                 </a>
-                <form id="user-delete-form" method="POST" action="{{ route('users.destroy', ['user' => $user->id]) }}">
+                <form id="user-delete-form" method="POST" action="{{ route('companies.destroy', ['user' => $user->id]) }}">
                     @csrf
                     @method('DELETE')
                 </form>

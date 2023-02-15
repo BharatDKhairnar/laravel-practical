@@ -10,7 +10,9 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
+        @if(Auth::check())
         @include('common.sidebar')
+        @endif
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->

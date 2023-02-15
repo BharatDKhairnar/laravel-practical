@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -18,7 +20,20 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if(isset(Auth::user()->database_name) && !empty(Auth::user()->database_name)){
+                $dbName = Auth::user()->database_name;
+                $dbName = Crypt::decryptString($dbName);
+                config(['database.connections.tenant.database' => $dbName]); // Set the database name
+                DB::purge('tenant');
+                DB::reconnect('tenant');
+            } else {
+                config(['database.connections.tenant.database' => $_ENV['DB_DATABASE']]); // Set the database name
+                DB::purge('mysql');
+                DB::reconnect('mysql');
+            }
+            return $next($request);
+        });
     }
 
     /**
@@ -28,6 +43,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        echo Config::get('database.connections.tenant.database');
         return view('home');
     }
 
@@ -35,37 +51,37 @@ class HomeController extends Controller
      * User Profile
      * @param Nill
      * @return View Profile
-     * @author Shani Singh
      */
     public function getProfile()
     {
-        return view('profile');
+        echo Config::get('database.connections.tenant.database');
+        $user = DB::connection('tenant')->table('users')
+                                        ->where('email',Auth::user()->email)
+                                        ->first();
+        return view('profile',['user' => $user]);
     }
 
     /**
      * Update Profile
      * @param $profileData
      * @return Boolean With Success Message
-     * @author Shani Singh
      */
     public function updateProfile(Request $request)
     {
         #Validations
         $request->validate([
-            'first_name'    => 'required',
-            'last_name'     => 'required',
-            'mobile_number' => 'required|numeric|digits:10',
+            'company_name'    => 'required',
+            'company_website'     => 'required',
+            'company_licence_number' => 'required',
         ]);
 
         try {
             DB::beginTransaction();
-            
+            unset($request['_token']);
             #Update Profile Data
-            User::whereId(auth()->user()->id)->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'mobile_number' => $request->mobile_number,
-            ]);
+            $user = DB::connection('tenant')->table('users')
+                                        ->where('email',Auth::user()->email)
+                                        ->update($request->all());
 
             #Commit Transaction
             DB::commit();
@@ -83,7 +99,6 @@ class HomeController extends Controller
      * Change Password
      * @param Old Password, New Password, Confirm New Password
      * @return Boolean With Success Message
-     * @author Shani Singh
      */
     public function changePassword(Request $request)
     {

@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -31,27 +31,26 @@ Route::prefix('profile')->name('profile.')->middleware('auth')->group(function()
     Route::post('/change-password', [HomeController::class, 'changePassword'])->name('change-password');
 });
 
-// Roles
-Route::resource('roles', App\Http\Controllers\RolesController::class);
-
-// Permissions
-Route::resource('permissions', App\Http\Controllers\PermissionsController::class);
-
 // Users 
-Route::middleware('auth')->prefix('users')->name('users.')->group(function(){
-    Route::get('/', [UserController::class, 'index'])->name('index');
-    Route::get('/create', [UserController::class, 'create'])->name('create');
-    Route::post('/store', [UserController::class, 'store'])->name('store');
-    Route::get('/edit/{user}', [UserController::class, 'edit'])->name('edit');
-    Route::put('/update/{user}', [UserController::class, 'update'])->name('update');
-    Route::delete('/delete/{user}', [UserController::class, 'delete'])->name('destroy');
-    Route::get('/update/status/{user_id}/{status}', [UserController::class, 'updateStatus'])->name('status');
+$controllerName = CompanyController::class;
+Route::prefix('companies')->name('companies.')->group(function() use($controllerName) {
+    Route::get('/create', [$controllerName, 'create'])->name('create');
+    Route::post('/store', [$controllerName, 'store'])->name('store');
+});
+
+Route::middleware('auth')->prefix('companies')->name('companies.')->group(function() use($controllerName) {
+    Route::get('/', [$controllerName, 'index'])->name('index');
+    Route::get('/edit/{user}', [$controllerName, 'edit'])->name('edit');
+    Route::put('/update/{user}', [$controllerName, 'update'])->name('update');
+    Route::delete('/delete/{user}', [$controllerName, 'delete'])->name('destroy');
+    Route::get('/update/status/{user_id}/{status}', [$controllerName, 'updateStatus'])->name('status');
 
     
-    Route::get('/import-users', [UserController::class, 'importUsers'])->name('import');
-    Route::post('/upload-users', [UserController::class, 'uploadUsers'])->name('upload');
+    Route::get('/import-users', [$controllerName, 'importUsers'])->name('import');
+    Route::post('/upload-users', [$controllerName, 'uploadUsers'])->name('upload');
 
-    Route::get('export/', [UserController::class, 'export'])->name('export');
+    Route::get('export/', [$controllerName, 'export'])->name('export');
 
 });
 
+Route::get('/company/dashboard', [$controllerName, 'dashboard'])->name('company-dashboard');
