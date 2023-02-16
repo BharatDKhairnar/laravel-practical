@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 
 class ProcessMultiTenant implements ShouldQueue
 {
@@ -31,11 +33,10 @@ class ProcessMultiTenant implements ShouldQueue
 
     protected function start()
     {
-        Log::info($this->request);
         $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
         $db = DB::select($query, [$this->request['company_name']]);
         if (empty($db)) {
-            $dbName = 'tenant'.strtolower($this->request['company_name']);
+            $dbName = 'tenant'.strtolower( Str::replace(" ","",$this->request['company_name']) );
             Schema::createDatabase($dbName);
             Schema::create($dbName.'.users', function (Blueprint $table) {
                 $table->id();
@@ -57,12 +58,14 @@ class ProcessMultiTenant implements ShouldQueue
             DB::beginTransaction();
             try {
             
-                User::create([
+                $user = User::create([
                     'first_name' => $this->request['company_name'],
                     'email' => $this->request['email'],
                     'password' => bcrypt($this->request['password']),
                     'database_name' => $dbName
                 ]);
+
+                $user->sendEmailVerificationNotification(); // Email send for verification
 
                 unset($this->request['_token']);
                 $this->request['password'] = bcrypt($this->request['password']);

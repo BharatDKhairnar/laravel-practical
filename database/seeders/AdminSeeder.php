@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,7 +24,9 @@ class AdminSeeder extends Seeder
             'last_name'     => 'Admin',
             'email'         =>  'admin@admin.com',
             'mobile_number' =>  '9028187696',
-            'password'      =>  Hash::make('Admin@123')
+            'password'      =>  Hash::make('Admin@123'),
+            'database_name' =>  $_ENV['DB_DATABASE'],
+            'email_verified_at' => Carbon::now()
         ]);
     }
 }

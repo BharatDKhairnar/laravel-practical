@@ -107,9 +107,11 @@
                                 @enderror
                             </div>
                         </div>
+                        @if(Auth::user()->first_name != "Super")
                         <div class="mt-5 text-center">
                             <button class="btn btn-primary profile-button" type="submit">Update Profile</button>
                         </div>
+                        @endif
                     </form>
                 </div>
 

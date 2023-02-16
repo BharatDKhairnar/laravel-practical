@@ -22,13 +22,14 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes(['verify' => true]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
 // Profile Routes
 Route::prefix('profile')->name('profile.')->middleware('auth')->group(function(){
     Route::get('/', [HomeController::class, 'getProfile'])->name('detail');
     Route::post('/update', [HomeController::class, 'updateProfile'])->name('update');
-    Route::post('/change-password', [HomeController::class, 'changePassword'])->name('change-password');
 });
 
 // Users 
@@ -40,17 +41,4 @@ Route::prefix('companies')->name('companies.')->group(function() use($controller
 
 Route::middleware('auth')->prefix('companies')->name('companies.')->group(function() use($controllerName) {
     Route::get('/', [$controllerName, 'index'])->name('index');
-    Route::get('/edit/{user}', [$controllerName, 'edit'])->name('edit');
-    Route::put('/update/{user}', [$controllerName, 'update'])->name('update');
-    Route::delete('/delete/{user}', [$controllerName, 'delete'])->name('destroy');
-    Route::get('/update/status/{user_id}/{status}', [$controllerName, 'updateStatus'])->name('status');
-
-    
-    Route::get('/import-users', [$controllerName, 'importUsers'])->name('import');
-    Route::post('/upload-users', [$controllerName, 'uploadUsers'])->name('upload');
-
-    Route::get('export/', [$controllerName, 'export'])->name('export');
-
 });
-
-Route::get('/company/dashboard', [$controllerName, 'dashboard'])->name('company-dashboard');

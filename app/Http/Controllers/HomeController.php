@@ -34,6 +34,8 @@ class HomeController extends Controller
             }
             return $next($request);
         });
+
+        
     }
 
     /**
@@ -43,7 +45,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        echo Config::get('database.connections.tenant.database');
         return view('home');
     }
 
@@ -54,7 +55,6 @@ class HomeController extends Controller
      */
     public function getProfile()
     {
-        echo Config::get('database.connections.tenant.database');
         $user = DB::connection('tenant')->table('users')
                                         ->where('email',Auth::user()->email)
                                         ->first();

@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-university"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Super-Admin</div>
+        <div class="sidebar-brand-text mx-3">{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</div>
     </a>
 
     <!-- Divider -->

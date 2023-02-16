@@ -1,37 +1,29 @@
 
-# Tech-Admin | Laravel 8 + Bootstrap 4 
 
-Tech-Admin is Admin Panel With Preset of Roles, Permissions, ACL, User Management, Profile Management.
-
+## Please Note: There is a mailtrap account in progress for domain verification so at the time of email verification check there is a chance to stop the ongoing process so You should change the email credentials on the .env file from your side.
 
 
+# Laravel-Admin | Laravel 9.1 
 
-## Features
-
-- Mobile Responsive Bootstrap 4 Design
-- User Management with Roles
-- Role Management
-- Permissions Management
-- Access Control List (ACL)
-- Laravel 8 + Bootstrap 4
+Laravel-Admin is Admin Panel With Multi tenat DB concept and update the Profile.
 
 
 ## Tech Stack
 
-**Client:** HTML, CSS, JavaScript, jQuery, VueJs, Bootstrap 4
+**Client:** HTML, CSS, JavaScript, jQuery
 
-**Server:** PHP, Laravel 8
+**Server:** PHP 8.0, Laravel 9.1.0
 
 **DataBase:** MySql
 
 
 ## Installation
 
-Install Tech-Admin With Simple Steps
+Install Laravel-Admin With Simple Steps
 
 ```bash
-git clone https://github.com/TechTool-India/techtool-laravel-admin.git
-cd techtool-laravel-admin
+git clone https://github.com/BharatDKhairnar/laravel-practical.git
+cd laravel-practical
 ```
 
 Install All Packages of laravel
@@ -60,31 +52,30 @@ Update .env File with Database credentials and run migration with seed.
 php artisan migrate --seed
 ```
 
-All Set ! now serve laravel app on local and open app in browser.
+App URL
+http://laravel-test.local
+OR
+http://127.0.0.1:8000/login
+
 
 Login With Admin
 ```bash
 Username - admin@admin.com
-Password - Admin@123#
+Password - Admin@123
 ```
 ## Screenshots
 
-![App Screenshot](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/53d53unbwjsvz2t0npan.png)
+![App Screenshot](https://prnt.sc/58BJIN3V-Kfb)
 
-![App Screenshot](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pp9vfllktg4gyarwqq84.png)
+![App Screenshot](https://prnt.sc/nNhvMkx1mY5P)
 
-![App Screenshot](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ijs2pn14sroqt37n6nq9.png)
+![App Screenshot](https://prnt.sc/yFhjjPT8OD4L)
 
-![App Screenshot](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/5w9yy33y0fspnnl68t0m.png)
+![App Screenshot](https://prnt.sc/Jr5IS3JYuVS6)
 
-![App Screenshot](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/v5p71gck63r039mk6jix.png)
+![App Screenshot](https://prnt.sc/L2Sy5CWLUnu5)
 
 ## Feedback
 
-If you have any feedback, please reach out to us at techtoolindia@gmail.com
-
-
-## Support
-
-For support, email techtoolindia@gmail.com or join our facebook chanel https://www.facebook.com/techtoolindia.
+If you have any feedback, please reach out to me at bharatdkhairanr@gmail.com
 

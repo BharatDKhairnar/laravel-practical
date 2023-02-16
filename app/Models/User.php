@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Crypt;
 use Laravel\Sanctum\HasApiTokens;
 
-class 
-User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -27,8 +26,20 @@ User extends Authenticatable
         'role_id',
         'status',
         'password',
-        'database_name'
+        'database_name',
+        'email_verified_at'
     ];
+
+    protected static function boot() // Override the method for send the email verification
+    {
+        parent::boot();
+        static::updating(function (User $user) {
+            if (in_array('email', $user->getChanges())) {
+                $user->email_verified_at = null;
+                $user->sendEmailVerificationNotification();
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
