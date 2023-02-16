@@ -53,18 +53,20 @@ php artisan migrate --seed
 ```
 
 App URL
-http://laravel-test.local
+```bash
+http://laravel-test.local/login
 OR
 http://127.0.0.1:8000/login
-
+```
 
 Company Register URL
+```bash
 http://laravel-test.local/companies/create
 OR
 http://127.0.0.1:8000/login/companies/create
+```
 
-
-Login With Admin
+Login With Super Admin
 ```bash
 Username - admin@admin.com
 Password - Admin@123
