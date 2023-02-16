@@ -65,15 +65,7 @@ Password - Admin@123
 ```
 ## Screenshots
 
-![App Screenshot](https://prnt.sc/58BJIN3V-Kfb)
-
-![App Screenshot](https://prnt.sc/nNhvMkx1mY5P)
-
-![App Screenshot](https://prnt.sc/yFhjjPT8OD4L)
-
-![App Screenshot](https://prnt.sc/Jr5IS3JYuVS6)
-
-![App Screenshot](https://prnt.sc/L2Sy5CWLUnu5)
+You can check the screenshot of practical in screenshots folder.
 
 ## Feedback
 
