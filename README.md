@@ -1,6 +1,6 @@
 
 
-## Please Note: There is a mailtrap account in progress for domain verification so at the time of email verification check there is a chance to stop the ongoing process so You should change the email credentials on the .env file from your side.
+**Please Note:** There is a mailtrap account in progress for domain verification so at the time of email verification check there is a chance to stop the ongoing process so You should change the email credentials on the .env file from your side.
 
 
 # Laravel-Admin | Laravel 9.1 
