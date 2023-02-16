@@ -58,6 +58,12 @@ OR
 http://127.0.0.1:8000/login
 
 
+Company Register URL
+http://laravel-test.local/companies/create
+OR
+http://127.0.0.1:8000/login/companies/create
+
+
 Login With Admin
 ```bash
 Username - admin@admin.com
