@@ -50,7 +50,7 @@
                        <div class="col-sm-6 mb-3 mt-3 mb-sm-0">
                           <span style="color:red;">*</span>Password</label>
                           <input 
-                             type="text" 
+                             type="password" 
                              class="form-control form-control-user @error('password') is-invalid @enderror" 
                              id="password"
                              placeholder="Password" 

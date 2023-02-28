@@ -9,16 +9,11 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Users</h1>
             <div class="row">
-                <div class="col-md-6">
+                {{-- <div class="col-md-12">
                     <a href="{{ route('companies.create') }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-plus"></i> Add New
                     </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="{{ route('companies.export') }}" class="btn btn-sm btn-success">
-                        <i class="fas fa-check"></i> Export To Excel
-                    </a>
-                </div>
+                </div> --}}
                 
             </div>
 
@@ -42,7 +37,6 @@
                                 <th width="25%">Email</th>
                                 <th width="15%">Mobile</th>
                                 <th width="15%">Status</th>
-                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,26 +52,6 @@
                                             <span class="badge badge-success">Active</span>
                                         @endif
                                     </td>
-                                    <td style="display: flex">
-                                        @if ($user->status == 0)
-                                            <a href="{{ route('companies.status', ['user_id' => $user->id, 'status' => 1]) }}"
-                                                class="btn btn-success m-2">
-                                                <i class="fa fa-check"></i>
-                                            </a>
-                                        @elseif ($user->status == 1)
-                                            <a href="{{ route('companies.status', ['user_id' => $user->id, 'status' => 0]) }}"
-                                                class="btn btn-danger m-2">
-                                                <i class="fa fa-ban"></i>
-                                            </a>
-                                        @endif
-                                        <a href="{{ route('companies.edit', ['user' => $user->id]) }}"
-                                            class="btn btn-primary m-2">
-                                            <i class="fa fa-pen"></i>
-                                        </a>
-                                        <a class="btn btn-danger m-2" href="#" data-toggle="modal" data-target="#deleteModal">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -90,7 +64,7 @@
 
     </div>
 
-    @include('companies.delete-modal')
+    {{-- @include('companies.delete-modal') --}}
 
 @endsection
 
